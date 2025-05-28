@@ -59,6 +59,7 @@ const salesArr = [
                 <div className='bg-[#2E2E48] w-[47%] rounded-md p-4'>
                     <h2 className='text-[18px] font-semibold'>Revenue By Category</h2>
                     <div>
+                        
                     </div>
                 </div>
             </div>

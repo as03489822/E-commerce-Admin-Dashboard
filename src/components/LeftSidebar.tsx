@@ -27,6 +27,11 @@ const LeftSidebar = () => {
       text:"Porducts",
       icon: products,
       path:"/products"
+    },
+    {
+      text:"Add Product",
+      icon: products,
+      path:"/add-product"
     }
   ];
 

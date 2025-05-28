@@ -1,0 +1,50 @@
+{
+    "headers": ["SNo" , "productName" , "productDescription" , "productPrice" , "productCategory" , "productQuantity" , "productImage"],
+    "data": [
+      {
+        "_id": "1",
+        "productName": "Laptop",
+        "productDescription": " this is good  product",
+        "productCategory": "Electronics",
+        "productQuantity": 25,
+        "productPrice": 800,
+        "productImage": "In Stock"
+      },
+      {
+        "_id": "2",
+        "productName": "Smartphone",
+        "productDescription": " this is good  product",
+        "productCategory": "Electronics",
+        "productQuantity": 50,
+        "productPrice": 600,
+        "productImage": "In Stock"
+      },
+      {
+        "_id": "3",
+        "productName": "Desk Chair",
+        "productDescription": " this is good  product",
+        "productCategory": "Furniture",
+        "productQuantity": 15,
+        "productPrice": 120,
+        "productImage": "Low Stock"
+      },
+      {
+        "_id": "4",
+        "productName": "Water Bottle",
+        "productDescription": " this is good  product",
+        "productCategory": "Accessories",
+        "productQuantity": 100,
+        "productPrice": 15,
+        "productImage": "In Stock"
+      },
+      {
+        "_id": "5",
+        "productName": "Gaming Console",
+        "productDescription": " this is good  product",
+        "productCategory": "Electronics",
+        "productQuantity": 30,
+        "productPrice": 500,
+        "productImage": "In Stock"
+      }
+    ]
+  }

@@ -93,7 +93,7 @@ const GenericTable = ({ headers,  data,  onEdit, onDelete }:propsData) => {
 
             return (
               <td key={index} className="px-4 py-2 text-center">
-                {item[header as keyof typeof item]}
+                {String(item[header as keyof typeof item])}
               </td>
             );
           })}

@@ -7,8 +7,12 @@ import products from '../../public/products.png';
 import logout from '../../public/logout.png'
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
+import {  useDispatch } from 'react-redux';
+import { removeToken } from '@/redux/slices/tokenSlice';
+import { toast } from 'react-toastify';
 
 const LeftSidebar = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const pathName = usePathname();
   const list = [
@@ -33,6 +37,12 @@ const LeftSidebar = () => {
     router.push(path);
   }
 
+  const handleLogout = () => {
+    localStorage.setItem("loggingOut", "true");
+    router.push('/');
+    dispatch(removeToken());
+    toast.success('logout successfully');
+  }
 
   return (
     <div className='h-screen bg-[#2E2E48] w-[20%] flex  flex-col gap-5 py-5 px-5 '>
@@ -48,7 +58,7 @@ const LeftSidebar = () => {
         </li>
         )}
       </ul>
-      <button className='flex text-white items-center gap-3 hover:bg-[#475BE8] rounded-md px-3 py-[10px]'>
+      <button className='flex text-white items-center gap-3 hover:bg-[#475BE8] rounded-md px-3 py-[10px]' onClick={handleLogout}>
           <Image src={logout} alt='logo' className='opacity-[90%] hover:optional-[100%] w-[15px] h-[15px] leading-[0px]'/>
         LOGOUT
         </button>

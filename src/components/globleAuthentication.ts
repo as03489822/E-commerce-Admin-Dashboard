@@ -9,12 +9,18 @@ export const useAuth = (redirectTo = "/") => {
     const { token } = useSelector((state : RootState) => state.authenticate);
 
     useEffect(() => {
+        const isLoggingOut = localStorage.getItem("loggingOut");
         if (!token) {
+            if (isLoggingOut) {
+                localStorage.removeItem("loggingOut"); // Clear flag
+                return;
+            }
             toast.error("Login first");
             router.push(redirectTo)
         }
     }, [token]);
 
     return token; 
+
 };
 

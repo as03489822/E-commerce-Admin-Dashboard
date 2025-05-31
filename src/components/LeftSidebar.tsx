@@ -3,7 +3,6 @@ import React from 'react'
 import logo from '../../public/Group 302.png'
 import Image from 'next/image'
 import dashboardIcon from '../../public/dashboard.png';
-import analysis from '../../public/analysis.png';
 import products from '../../public/products.png';
 import logout from '../../public/logout.png'
 import { useRouter } from 'next/navigation';
@@ -19,12 +18,7 @@ const LeftSidebar = () => {
       path:"/dashboard"
     },
     {
-      text:"Revenue Analysis",
-      icon: analysis,
-      path:"/revenue-analysis"
-    },
-    {
-      text:"Porducts",
+      text:"Products",
       icon: products,
       path:"/products"
     },

@@ -1,9 +1,12 @@
 "use client"
 import GenericTable from '@/components/GenericTabel';
 import LeftSidebar from '@/components/LeftSidebar';
-import React, { useState } from 'react';
-import stock from '../../../public/stock.json';
+import React, { useEffect, useState } from 'react';
+// import stock from '../../../public/stock.json';
 import { useRouter } from 'next/navigation';
+import {useAuth} from '@/components/globleAuthentication'
+import { makeApiRequest } from '@/utils/axios';
+import { toast } from 'react-toastify';
 
 interface Products {
         _id: string;
@@ -12,19 +15,53 @@ interface Products {
         productPrice:number;
         productCategory:string;
         productQuantity:number;
-        productImage:string;
+        image: {
+          productImageUrl: string;
+          productImagePublicId: string
+        }
     }
 
+    interface ProductData {
+    headers: string[];
+    data: Products[];
+}
+
 const Products = () => {
+    const token = useAuth();
     const router = useRouter();
-    const [productData, setProductData] = useState({
-        headers: ['SNo' , 'productName' , 'productDescription' , 'productPrice' , 'productCategory' , 'productQuantity' , "productImage"],
-        data: stock.data
+    const [productData, setProductData] = useState<ProductData>({
+        headers: ['SNo' , 'productName' , 'productDescription' , 'productPrice' , 'productCategory' , 'productQuantity' , "image"],
+        data:[]
     });
+
     const [showRows, setRowsToShow] = useState(5);
     const [filter, setFilter] = useState<Products[] | null>(null);
     const [searchQuery , setSearchQuery] = useState('');    
     const [initialCount , setInitialCount]  = useState(0);
+    const [isClient, setIsClient] = useState(false)
+ 
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
+    const getProducts = async() => {
+        const url = "/api/product";
+        const response = await makeApiRequest({url});
+        console.log(response)
+        if (response.status === 200){
+            setProductData((preData)=>{
+                return {
+                    ...preData,
+                    data :response.data
+                }
+            })
+        }else{
+            toast.error(response.data.message)
+        }
+    }
+
+    useEffect(()=>{
+        getProducts()
+    } ,[])
 
     const handleEdit = (item:string) => {
       console.log(item)
@@ -46,7 +83,7 @@ const Products = () => {
     }
         const  filterData = productData.data.filter((product) => {
             return (
-                product.productName.toLowerCase().includes(searchQuery) 
+                product?.productName?.toLowerCase().includes(searchQuery)
             )
         })
 
@@ -74,7 +111,7 @@ const Products = () => {
     const baseData = filter || filterData;
     const displayData = baseData?.slice(initialCount, initialCount+showRows);
 
-
+    if(isClient && !token) return null;
     return (
     <div className='flex w-full text-white'>
         <LeftSidebar />
@@ -128,14 +165,15 @@ const Products = () => {
                 </div>
             </div>
 
-            <div className='w-[85%]'>
+            <div className='w-[85%] overflow-x-auto'>
                 <GenericTable 
-                    headers={productData.headers}
-                    data={displayData}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
+                headers={productData.headers}
+                data={displayData}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
                 />
             </div>
+
 
             <div className="pages flex justify-center gap-3 mt-4">
                 <button onClick={showPrevious} className={`px-4 ${ initialCount - showRows >= 0?'block':'hidden'} py-1 rounded cursor-pointer  bg-[#2E2E48] hover:bg-[#525283]`}>

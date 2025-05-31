@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
-
+import Image from 'next/image';
 interface propsData {
     headers:string[];
     data:{
@@ -10,7 +10,10 @@ interface propsData {
         productPrice:number;
         productCategory:string;
         productQuantity:number;
-        productImage:string;
+        image: {
+          productImageUrl: string;
+          productImagePublicId: string
+        }
     }[]| [];
     onEdit: (id: string) => void;
     onDelete: (id: string) => void;
@@ -18,7 +21,7 @@ interface propsData {
 const GenericTable = ({ headers,  data,  onEdit, onDelete }:propsData) => {
 
   return (
-<table className="border-collapse border border-gray-300 w-full overflow-x-auto whitespace-nowrap rounded-md">
+<table className="border-collapse border border-gray-300 w-full  overflow-x-auto  whitespace-nowrap rounded-md">
   {/* Table Header */}
   <thead>
     <tr>
@@ -62,21 +65,35 @@ const GenericTable = ({ headers,  data,  onEdit, onDelete }:propsData) => {
             }
 
             // Optional: Custom rendering for productDescription
-            // if (header === 'productDescription') {
-            //   return (
-            //     <td key={index} className="px-4 py-2 text-center">
-            //       <p className="w-[400px] text-start">
-            //         {item[header as keyof typeof item]?.length > 50
-            //           ? `${(item[header as keyof typeof item] as string).substring(0, 50)}...`
-            //           : item[header as keyof typeof item]}
-            //       </p>
-            //     </td>
-            //   );
-            // }
+                if (header === 'image') {
+                  return (
+                    <td
+                      key={index}
+                      className={`px-4 py-2 text-center`}
+                    >
+                      <Image className='rounded-full w-10 h-10 mx-auto' width={40}  height={40} src={item.image.productImageUrl} alt="Logo" />
+
+                    </td>
+                  );
+                }
+
+                 if (header === 'productDescription') {
+                  return (
+                    <td
+                      key={index}
+                      className={`px-4 py-2 text-center`}
+                    >
+                      <p className='w-[400px] text-start'>
+                        {item[header] ?.length > 50? `${item[header].substring(0,50)}...`:item[header]}
+                      </p>
+
+                    </td>
+                  );
+                }
 
             return (
               <td key={index} className="px-4 py-2 text-center">
-                {header === "permissions" ? null : item[header as keyof typeof item]}
+                {item[header as keyof typeof item]}
               </td>
             );
           })}

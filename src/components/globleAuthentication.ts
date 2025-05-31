@@ -1,12 +1,12 @@
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation'; 
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import type { RootState } from "@/redux/store";
 
-
-export const Auth = (redirectTo = "/") => {
+export const useAuth = (redirectTo = "/") => {
     const router = useRouter();
-    const { token } = useSelector(state => state.authenticate);
+    const { token } = useSelector((state : RootState) => state.authenticate);
 
     useEffect(() => {
         if (!token) {
@@ -16,4 +16,5 @@ export const Auth = (redirectTo = "/") => {
     }, [token]);
 
     return token; 
-};  
+};
+

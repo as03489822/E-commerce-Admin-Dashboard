@@ -30,9 +30,9 @@ export const makeApiRequest = async ({
         };
         const response = await axios(config);
         console.log("Axios Response",response)
-        return response.data;
+        return response;
     } catch (error: any) {
         // console.error('Error making API request:', error.message);
-        return error.response.data;
+        return error.response;
     }
 };

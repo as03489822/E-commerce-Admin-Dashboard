@@ -1,10 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit';
-import loadingSlice from './slices/loadingSlice';
+import tokenSlice from './slices/tokenSlice'
+import { addStateToLocalStorage , loadStateFromLocalStorage } from '@/utils/localStorage';
+
+const isBrowser = typeof window !== 'undefined';
+
+
+const persistedState = isBrowser ? loadStateFromLocalStorage() : undefined;
 
 export const store = configureStore({
-  reducer: {
-    loading: loadingSlice,
+  reducer:{
+    authenticate : tokenSlice
   },
+  preloadedState: persistedState
+});
+
+store.subscribe(() => {
+  addStateToLocalStorage(store.getState());
 });
 
 // Type definitions

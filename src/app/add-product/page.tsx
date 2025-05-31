@@ -1,27 +1,43 @@
 "use client"
 import LeftSidebar from '@/components/LeftSidebar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import defaultProduct from '../../../public/defaultProduct.png';
 import type { StaticImageData } from 'next/image';
+import { makeApiRequest } from '@/utils/axios';
+import { toast } from 'react-toastify'; 
+import { useRouter } from 'next/navigation'; 
+import { useAuth } from '@/components/globleAuthentication';
 
+
+interface FormState {
+  productName: string;
+  productDescription: string;
+  productPrice: string;
+  productQuantity: string;
+  productCategory: string;
+  productImage: string | File;
+}
 
 const AddProduct = () => {
+  const token = useAuth();
+  const router = useRouter();
   const [previewUrl , setPreviewUrl] = useState<StaticImageData | string>(defaultProduct)  
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormState>({
     productName: "",
     productDescription:"",
     productPrice: "",
     productQuantity:"",
     productCategory:"",
-    productSubCategory:"",
     productImage:"",
-    productTag:"", 
-    rating:""
   });
 
   const categroies = ["Beauty And Skincare" , "Kitchen" , 'Accessories' , "Laptop And Mobile" , "Home Decore"]
-
+  const [isClient, setIsClient] = useState(false)
+ 
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
   const target = e.target;
   console.log(target)
@@ -45,10 +61,38 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     }
   } else {
     const { name, value } = target;
+    console.log(name , value)
     setFormData({ ...formData, [name]: value });
   }
 };
 
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  const data = new FormData();
+  Object.keys(formData).forEach((key) => {
+    const typedKey = key as keyof typeof formData;
+    const value = formData[typedKey];
+
+    if (value !== null && value !== undefined) {
+      data.append(typedKey, value as any);
+    } else {
+      console.log('Missing value for key:', typedKey);
+    }
+  });
+  const url = '/api/product';
+  const method = 'POST';
+  const contentType = 'multipart/form-data'
+  const response = await makeApiRequest({url , method , data , contentType});
+  if(response.status === 201){
+    toast.success(response.data.message)
+    router.push('/products');
+  }else{
+    toast.error(response.data.message);
+  }
+};
+
+    if(isClient && !token) return null;
     return (
     <div className='flex w-full text-white'>
         <LeftSidebar />
@@ -56,7 +100,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
             <h1 className='w-[85%] text-[22px] font-bold'>Add Product</h1>
             {/* <div className={`flex flex-col items-center lg:ml-10 w-full lg:w-[1000px] h-screen`}> */}
           <form
-            // onSubmit={handleSubmit}
+            onSubmit={handleSubmit}
             className={` mt-4 shadow-lg rounded-md p-6 bg-[#2E2E48] w-[85%] `}
           >  
             {/* form  fields */}
@@ -130,9 +174,8 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
                 <select
                   name="productCategory"
                   id="productCategory"
-                //   placeholder="Enter product Category"
-                //   value={formData.productCategory}
-                //   onChange={handleChange}
+                  value={formData.productCategory}
+                  onChange={handleChange}
                   className={`w-full mt-2 px-4 py-2 rounded-md focus:outline-none bg-[#383854] focus:bg-[#525283]`}
                   required
                 >

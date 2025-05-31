@@ -1,11 +1,17 @@
 "use client"
 import LeftSidebar from '@/components/LeftSidebar'
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CompanyGraph from '@/components/CompanyGraph';
 import TotalRevenueChart from '@/components/TotalRevenueChart';
-
+import {  useAuth } from '@/components/globleAuthentication';
 
 const Dashboard = () => {
+    const token = useAuth();
+    const [isClient, setIsClient] = useState(false)
+ 
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
 const salesArr = [
     {
         name : "Todays Sales",
@@ -26,6 +32,7 @@ const salesArr = [
         color: "#F29A2E"
     }
 ]
+    if(isClient && !token) return null;
     return (
     <div className='flex w-full text-white'>
         <LeftSidebar />

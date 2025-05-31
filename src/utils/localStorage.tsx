@@ -10,13 +10,29 @@ export const addStateToLocalStorage = (state : RootState) => {
     }
   };
   
-  export const loadStateFromLocalStorage = () => {
-    try {
-      const serializedState = localStorage.getItem('dState');
-      if (serializedState === null) return undefined;
-      return JSON.parse(serializedState);
-    } catch (error) {
-      console.error('Error loading state:', error);
-      return undefined;
+export const loadStateFromLocalStorage = () => {
+  try {
+    const serializedState = localStorage.getItem('dState');
+    if (!serializedState) return undefined;
+
+    const parsed = JSON.parse(serializedState);
+
+    // Ensure the shape matches { authenticate: { token: string | null } }
+    if (
+      parsed &&
+      parsed.authenticate &&
+      typeof parsed.authenticate.token !== 'undefined'
+    ) {
+      return {
+        authenticate: {
+          token: parsed.authenticate.token,
+        },
+      };
     }
-  };
+
+    return undefined;
+  } catch (error) {
+    console.error('Error loading state:', error);
+    return undefined;
+  }
+};
